@@ -2,7 +2,7 @@
   "name": "grib-parser",
   "version": "1.0.0",
   "description": "YHacks",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/rsgc-peterson-e/grib-parser/issues"
   },
-  "homepage": "https://github.com/rsgc-peterson-e/grib-parser#readme"
+  "homepage": "https://github.com/rsgc-peterson-e/grib-parser#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }

@@ -9,34 +9,58 @@ dirMessage = dirFile.message(1)
 data = {
 	'count' : dirMessage.numberOfValues,
 	'data' : [{
-		'latitude' : 0,
-		'longitude' : 0,
-		'direction' : 0,
-		'velocity' : 0,
+		'pos' : 0,
+		'd' : 0,
+		'v' : 0,
 	}],
 	'units' : {
-		'velocity' : vMessage.units,
-		'direction' : dirMessage.units,
+		'v' : vMessage.units,
+		'd' : dirMessage.units,
 	},
 }
 
+#vFilter = vMessage.data(0, 50, 0, 50)
+#dirFilter = dirMessage.data(lat1=90, lat2=0, lon1=90, lon2=0)
+#print(dirFilter)
 lats = dirMessage.latitudes
 lons = dirMessage.longitudes
+
+#print(lons[0][0])
+
+bandValCap = 90/0.25
+print(bandValCap)
 
 dirn = dirMessage.codedValues
 
 velocities = vMessage.codedValues
 
-for i in range(0, data['count']):
-	val = {
-		'latitude' : lats[i],
-		'longitiude' : lons[i],
-		'direction' : dirn[i],
-		'velocity' : velocities[i],
-	}
-	data['data'].append(val.copy())
+#pos = []
+#pos.append([])
+#count = 0
+#row = 0
+#print(lons[1])
 
-#json = json.dumps(data)
+row = 0
+
+w, h = 180, 180;
+pos = [[0 for x in range(w)] for y in range(h)]
+
+for i in range(0, h):
+	for j in range(0, w):
+		pos[i][j] = lons[j]
+		val = {
+			'lat' : i * 0.25, 
+			'lon' : lons[j], 
+			'd' : dirn[i * j], 
+			'v' : velocities[i * j]
+		}
+		data['data'].append(val.copy())
+	
+for i in range(0, 360 * 360):
+	break
+
+#print(pos)
+data['pos'] = pos
 with open('output.json', 'w') as outfile:  
     json.dump(data, outfile)
 exit()

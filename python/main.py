@@ -1,34 +1,42 @@
 import pygrib, json, numpy
 
-grb = pygrib.open('gfs.t18z.pgrb2.0p25.f008.VGRD')
+dirFile = pygrib.open('gfs.t18z.pgrb2.0p25.f008.VGRD')
+vFile = pygrib.open('gfs.t18z.pgrb2.0p25.f008.UGRD')
 
-print(grb.message(1))
-keys = grb.message(1).keys()
-for i in keys:
-   print(i)
-   pass
-message = grb.message(1)
-print(message.name)
-print(message.units)
-print(message.codedValues)
-#print(message.name)
-print(message.minimum)
-#print(message.numberOfSection)
-#print(message.numberOfValues)
-#print(message.sectionNumber)
-#print(len(message.latitudes))
-#print(len(message.longitudes))
+vMessage = vFile.message(1)
+dirMessage = dirFile.message(1)
 
 data = {
-    'count' : message.numberOfValues,
-    'positions' : [{
-        'latitude' : 0,
-        'longitude' : 0,
-    }],
-    'velocities' : [],
+	'count' : dirMessage.numberOfValues,
+	'data' : [{
+		'latitude' : 0,
+		'longitude' : 0,
+		'direction' : 0,
+		'velocity' : 0,
+	}],
+	'units' : {
+		'velocity' : vMessage.units,
+		'direction' : dirMessage.units,
+	},
 }
 
+lats = dirMessage.latitudes
+lons = dirMessage.longitudes
 
+dirn = dirMessage.codedValues
 
-print(data)
+velocities = vMessage.codedValues
+
+for i in range(0, data['count']):
+	val = {
+		'latitude' : lats[i],
+		'longitiude' : lons[i],
+		'direction' : dirn[i],
+		'velocity' : velocities[i],
+	}
+	data['data'].append(val.copy())
+
+#json = json.dumps(data)
+with open('output.json', 'w') as outfile:  
+    json.dump(data, outfile)
 exit()
